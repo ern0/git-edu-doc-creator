@@ -1,2 +1,2 @@
-# git-edu-doc-creator
-GIT Educational Doc Creator
+# script-edu-doc-creator
+Script Educational Doc Creator
