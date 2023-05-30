@@ -1,0 +1,29 @@
+# Merge, with squash
+
+## Step 1: master branch
+
+Switch to `master`:
+
+$ git checkout master
+$ echo "a = 1" > the_code.txt
+
+The file contains `a = 1`.
+
+$ cat the_code.txt
+$ git add the_code.txt
+$ git commit -m "a=1"
+
+## Step 2: fork
+
+Fork `feature` branch:
+
+$ git checkout -b feature
+
+$ echo "a = 2" > the_code.txt
+$ echo "print(a)" >> the_code.txt
+
+The file contains `a = 2`.
+$ cat the_code.txt
+$ git commit -am "a=2 on feature branch"
+
+## Step 3: merge
