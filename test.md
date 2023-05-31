@@ -1,13 +1,9 @@
-````
-$ a
-exec: a
-$ b
-exec: b
-````
-
-hello
-
-````
-$ c
-exec: c
-````
+ez itt nem pwd:
+--
+ez meg pwd:
+```
+$ pwd
+res
+$ ls /
+res
+```

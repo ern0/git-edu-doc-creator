@@ -1,6 +1,6 @@
-$ a
-$ b
-
-hello
-
-$ c
+ez itt nem pwd:
+$$ pwd
+--
+ez meg pwd:
+$ pwd
+$ ls /

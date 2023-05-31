@@ -72,7 +72,7 @@ class EduCreator:
 
         if self.is_inside_cmd:
 
-            if self.is_command(line):
+            if self.is_starting_with_dollar(line):
                 self.append_exec(line)
             else:
                 self.is_inside_cmd = False
@@ -81,45 +81,74 @@ class EduCreator:
             
         else:
 
-            if self.is_command(line):
+            if self.is_starting_with_dollar(line):
                 self.is_inside_cmd = True
                 self.append_code_block_open()
                 self.append_exec(line)
             else:
                 self.append_line(line)
 
-
-    def is_command(self, line):
+    def is_starting_with_dollar(self, line):
         if line == "": return False
         return line[0] == '$'
 
     def append_line(self, line):
+
+        if self.is_inside_cmd:
+            self.code_block.append(line)
+        else:
+            self.append_raw_line(line)
+    
+    def append_raw_line(self, line):
         print(line, file=self.res)
     
     def append_code_block_open(self):
-        self.append_line("````")
+        self.code_block = []
 
     def append_code_block_close(self):
-        self.append_line("````")
+
+        if len(self.code_block) == 0:
+            return
+        
+        self.append_raw_line("```")
+
+        for line in self.code_block:
+            self.append_raw_line(line)
+
+        self.append_raw_line("```")
 
     def append_exec(self, line):
 
-        self.append_line(line)
-
         command = line[1:].strip()
-        result = self.exec(command)
-        self.append_line(result)
 
+        if self.is_starting_with_dollar(command):
+            suppress_output = True
+            command = command[1:].strip()
+        else:
+            suppress_output = False
+            self.append_line(line)
+
+        result = self.exec(command)
+        if not suppress_output:
+            self.append_cmd_result(result)
+    
     def exec(self, command):
 
-        cmd_array = shlex.split(command)
+        cmd_eff = ["/bin/bash", "-c", command]
         try:
-            result = subprocess.check_output(cmd_array)
+            result = subprocess.check_output(cmd_eff)
         except subprocess.CalledProcessError:
             print("ERROR: command failed: " + command)
             quit(1)
 
         return result        
+
+    def append_cmd_result(self, result):
+
+        res_chr = result.decode("utf-8")
+        res_arr = res_chr.split("\n")
+        for res in res_arr:
+            self.code_block.append(res)
 
 if __name__ == "__main__":
     try:
