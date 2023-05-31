@@ -70,6 +70,10 @@ class EduCreator:
     
     def process_line(self, line):
 
+        if line == "":
+            self.append_line("")
+            return
+
         if self.is_inside_cmd:
 
             if self.is_starting_with_dollar(line):
@@ -107,8 +111,13 @@ class EduCreator:
 
     def append_code_block_close(self):
 
-        if len(self.code_block) == 0:
+        cb_len = len(self.code_block)
+
+        if cb_len == 0:
             return
+    
+        if self.code_block[cb_len - 1] == "":
+            del self.code_block[cb_len - 1]
         
         self.append_raw_line("```")
 
@@ -129,8 +138,14 @@ class EduCreator:
             self.append_line(line)
 
         result = self.exec(command)
-        if not suppress_output:
-            self.append_cmd_result(result)
+
+        if suppress_output:
+            return
+        res_chr = result.decode("utf-8")
+        if res_chr.strip() == "":
+            return
+        
+        self.append_cmd_result(res_chr)
     
     def exec(self, command):
 
@@ -145,8 +160,10 @@ class EduCreator:
 
     def append_cmd_result(self, result):
 
-        res_chr = result.decode("utf-8")
-        res_arr = res_chr.split("\n")
+        if result.endswith("\n"):
+            result = result[:-1]
+
+        res_arr = result.split("\n")
         for res in res_arr:
             self.code_block.append(res)
 
