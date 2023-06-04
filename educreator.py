@@ -10,14 +10,14 @@ class EduCreator:
 
     def main(self):
 
-        self.dir = "/tmp/educreator"
+        self.work_dir = "/tmp/educreator"
 
         if len(sys.argv) < 2:
             print("specify files")
             quit()
 
         self.prepare_directory()
-        self.prepare_repository()        
+        self.prepare_repository()
 
         for i in range(1, len(sys.argv)):
             arg = sys.argv[i]
@@ -29,24 +29,24 @@ class EduCreator:
         self.script_dir = os.getcwd() + "/"
 
         try:
-            shutil.rmtree(self.dir)
+            shutil.rmtree(self.work_dir)
         except FileNotFoundError:
             pass
 
         try:
-            os.mkdir(self.dir, 0o0755);
+            os.mkdir(self.work_dir, 0o0755);
         except FileExistsError:
             pass
 
-        os.chdir(self.dir)
+        os.chdir(self.work_dir)
     
     def prepare_repository(self):
-        
+
         self.exec("git init -b master")
         self.exec("touch .gitignore")
         self.exec("git add .gitignore")
         self.exec("git commit -m 'initial commit'")
-
+        
     def process_file(self, fnam):
 
         if not fnam.endswith(".edu"):
