@@ -77,6 +77,7 @@ class EduCreator:
         if self.is_inside_cmd:
 
             if self.is_starting_with_dollar(line):
+                self.append_line("")
                 self.append_exec(line)
             else:
                 self.is_inside_cmd = False
@@ -131,16 +132,13 @@ class EduCreator:
         command = line[1:].strip()
 
         if self.is_starting_with_dollar(command):
-            suppress_output = True
             command = command[1:].strip()
-        else:
-            suppress_output = False
-            self.append_line(line)
+            self.exec(command)
+            return
+
+        self.append_line(line)
 
         result = self.exec(command)
-
-        if suppress_output:
-            return
         res_chr = result.decode("utf-8")
         if res_chr.strip() == "":
             return
@@ -151,7 +149,7 @@ class EduCreator:
 
         cmd_eff = ["/bin/bash", "-c", command]
         try:
-            result = subprocess.check_output(cmd_eff)
+            result = subprocess.check_output(cmd_eff, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError:
             print("ERROR: command failed: " + command)
             quit(1)

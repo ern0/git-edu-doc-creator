@@ -1,29 +1,31 @@
-# Merge, with squash
+# Simple merge 1/3
 
-## Step 1: master branch
-
-Switch to `master`:
+Set up `master` branch with `a=1`
 
 $ git checkout master
 $ echo "a = 1" > the_code.txt
-
-The file contains `a = 1`.
-
 $ cat the_code.txt
 $ git add the_code.txt
-$ git commit -m "a=1"
+$ git commit -m "setting a=1"
 
-## Step 2: fork
+# Simple merge 2/3
 
-Fork `feature` branch:
+Fork `feature` branch with two commits: `a=2` and some `print()`
 
 $ git checkout -b feature
-
 $ echo "a = 2" > the_code.txt
-$ echo "print(a)" >> the_code.txt
-
-The file contains `a = 2`.
 $ cat the_code.txt
-$ git commit -am "a=2 on feature branch"
+$ git commit -am "setting a=2 on feature branch"
 
-## Step 3: merge
+$ echo "print(a)" >> the_code.txt
+$ cat the_code.txt
+$ git commit -am "also add some print() to feature branch"
+
+# Simple merge 3/3
+
+Merge two commits into master
+
+$ git checkout master
+$ git merge feature --no-ff -m "merge feature a=2 to master a=1"
+$ git log --oneline
+$ cat the_code.txt
